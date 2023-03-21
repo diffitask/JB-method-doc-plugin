@@ -4,6 +4,7 @@ import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
+import com.intellij.psi.javadoc.PsiDocComment
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtPsiFactory
@@ -92,9 +93,17 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
                 val psiFactory = JavaPsiFacade.getInstance(project).elementFactory
                 // create Javadoc
                 val methodDocElement = psiFactory.createDocCommentFromText(methodDocStr)
+                // our method
+                val elementMethod = element.parent as PsiMethod
+
+                //  if the method already had documentation (it can only be the 1st child) delete it
+                //  if there were some comments before declaration, they will be saved (they may be needed by the user and theoretically do not relate to documentation)
+                if (elementMethod.firstChild is PsiDocComment) {
+                    elementMethod.firstChild.delete()
+                }
+
                 // add generated documentation to method as its first child
-                val elementFun = element.parent as PsiMethod
-                elementFun.addBefore(methodDocElement, elementFun.firstChild)
+                elementMethod.addBefore(methodDocElement, elementMethod.firstChild)
             }
         }
 
