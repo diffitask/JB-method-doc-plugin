@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.kotlin.util.suffixIfNot
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -25,6 +26,15 @@ version = properties("pluginVersion").get()
 // Configure project's dependencies
 repositories {
     mavenCentral()
+}
+
+// ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
+fun ktor(module: String, prefix: String = "client-", version: String? = "2.1.0"): Any =
+    "io.ktor:ktor-${prefix.suffixIfNot("-")}$module:$version"
+
+dependencies {
+    implementation("com.aallam.openai:openai-client:3.1.1")
+    implementation(ktor("okhttp"))
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

@@ -1,10 +1,14 @@
 package intention
 
+import com.aallam.openai.api.completion.CompletionRequest
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.javadoc.PsiDocComment
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtPsiFactory
@@ -61,8 +65,28 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
         return true
     }
 
-    private fun generateMethodDocumentation(methodName: String): String {
-        return "/** Some documentation */" // TODO: to add OpenAI
+    private fun generateMethodDocumentation(methodCode: String): String {
+        val openAIApiSecretKey = "" // TODO: to add secret key before running app
+        val openAI = OpenAI(openAIApiSecretKey)
+
+        val completionRequest = CompletionRequest(
+            model = ModelId("text-davinci-003"),
+            prompt = """
+                Generate Javadoc or KDoc for method below. Please write only documentation in Java style:
+
+                $methodCode
+
+                /**
+            """.trimIndent(),
+            stop = listOf("*/"),
+            temperature = 0.7,
+            maxTokens = 256
+        )
+        val completion = runBlocking {
+            openAI.completion(completionRequest)
+        }
+        val methodDoc = completion.choices[0].text
+        return "/** $methodDoc */"
     }
 
     /**
@@ -75,7 +99,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
      */
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         // generate method documentation
-        val methodDocStr = generateMethodDocumentation(element.text)
+        val methodDocStr = generateMethodDocumentation(element.parent.text)
 
         when (element.language.id) {
             "kotlin" -> {
