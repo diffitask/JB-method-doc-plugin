@@ -83,9 +83,17 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
                 val psiFactory = KtPsiFactory(project)
                 // create KDoc
                 val methodDocElement = psiFactory.createComment(methodDocStr) as KDoc
+
+                val elementMethod = element.parent as KtNamedFunction
+
+                //  if the method already had documentation (it can only be the 1st child) delete it
+                //  if there were some comments before declaration, they will be saved (they may be needed by the user and theoretically do not relate to documentation
+                if (elementMethod.firstChild is KDoc) {
+                    elementMethod.firstChild.delete()
+                }
+
                 // add generated documentation to method as its first child
-                val elementFun = element.parent as KtNamedFunction
-                elementFun.addBefore(methodDocElement, elementFun.firstChild)
+                elementMethod.addBefore(methodDocElement, elementMethod.firstChild)
             }
 
             "JAVA" -> {
@@ -96,8 +104,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
                 // our method
                 val elementMethod = element.parent as PsiMethod
 
-                //  if the method already had documentation (it can only be the 1st child) delete it
-                //  if there were some comments before declaration, they will be saved (they may be needed by the user and theoretically do not relate to documentation)
+                //  check if the method already had documentation
                 if (elementMethod.firstChild is PsiDocComment) {
                     elementMethod.firstChild.delete()
                 }
@@ -106,7 +113,5 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
                 elementMethod.addBefore(methodDocElement, elementMethod.firstChild)
             }
         }
-
-        // TODO: to process the case when method already had some documentation
     }
 }
