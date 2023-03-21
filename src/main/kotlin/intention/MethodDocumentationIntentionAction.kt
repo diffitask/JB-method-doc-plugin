@@ -83,5 +83,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
 
         // TODO: to process the case when method already had some documentation
     }
-
+    override fun getText(): String {
+        return "Generate method documentation"
+    }
 }
