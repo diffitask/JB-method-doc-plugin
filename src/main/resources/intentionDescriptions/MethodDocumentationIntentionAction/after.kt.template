@@ -1,0 +1,4 @@
+<spot>/** Some documentation */</spot>
+fun awesomeMethod() {
+    println("Awesome day!")
+}
