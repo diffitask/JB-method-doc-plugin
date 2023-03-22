@@ -1,4 +1,4 @@
-/** Some new one documentation. The comments below remained untouched with all their white spaces.*/
+/** Some new one documentation. The comments below remained untouched with all their white spaces. */
 // comment 1
 
 // comment 2

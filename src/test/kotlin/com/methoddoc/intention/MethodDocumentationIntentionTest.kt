@@ -4,37 +4,58 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.junit.Assert
 
 class MethodDocumentationIntentionTest : BasePlatformTestCase() {
+    override fun getTestDataPath() = "src/test/testData"
     fun testMethodWithoutAnyDoc() {
-        checkMethodDocumentationIntention("WithoutAnyDoc", "/** Some generated documentation */")
+        val testName = "WithoutAnyDoc"
+        val nextDocSuggestion = "/** Some generated documentation */"
+        checkIntentionForKotlinAndJava(testName, nextDocSuggestion)
     }
 
     fun testComplicatedMethodIntention() {
-        checkMethodDocumentationIntention("ComplicatedMethod", "/** Some generated documentation for the complicated method */")
+        val testName = "ComplicatedMethod"
+        val nextDocSuggestion = "/** Some generated documentation for the complicated method */"
+        checkIntentionForKotlinAndJava(testName, nextDocSuggestion)
     }
 
     fun testMethodWithPreviousDoc() {
-        checkMethodDocumentationIntention("WithPreviousDoc", "/** Some new documentation that replaced the old one */")
+        val testName = "WithPreviousDoc"
+        val nextDocSuggestion = "/** Some new documentation that replaced the old one */"
+        checkIntentionForKotlinAndJava(testName, nextDocSuggestion)
     }
 
     fun testMethodWithDocAndComment() {
-        checkMethodDocumentationIntention("WithDocAndComment", "/** Some new one documentation. The comment below remained untouched. */")
+        val testName = "WithDocAndComment"
+        val nextDocSuggestion = "/** Some new one documentation. The comment below remained untouched. */"
+        checkIntentionForKotlinAndJava(testName, nextDocSuggestion)
     }
 
     fun testMethodWithManyCommentsWithSpaces() {
-        checkMethodDocumentationIntention("ManyCommentsWithSpaces", "/** Some new one documentation. The comments below remained untouched with all their white spaces.*/")
+        val testName = "ManyCommentsWithSpaces"
+        val nextDocSuggestion =
+            "/** Some new one documentation. The comments below remained untouched with all their white spaces. */"
+        checkIntentionForKotlinAndJava(testName, nextDocSuggestion)
     }
 
     fun testWrongCaretPosition() {
-        checkWrongCaretPosition("WrongCaretPosition1")
-        checkWrongCaretPosition("WrongCaretPosition2")
-        checkWrongCaretPosition("WrongCaretPosition3")
+        checkWrongCaretPosForKotlinAndJava("WrongCaretPosition1")
+        checkWrongCaretPosForKotlinAndJava("WrongCaretPosition2")
+        checkWrongCaretPosForKotlinAndJava("WrongCaretPosition3")
     }
 
-    override fun getTestDataPath() = "src/test/testData"
+    private fun checkIntentionForKotlinAndJava(testName: String, nextDocSuggestion: String) {
+        checkMethodDocumentationIntention(testName, "kotlin", "kt", nextDocSuggestion)
+        checkMethodDocumentationIntention(testName, "java", "java", nextDocSuggestion)
+    }
 
-    private fun checkMethodDocumentationIntention(testName: String, nextDocSuggestion: String) {
-        val beforeTestFileName = "$testName.before.kt"
-        val afterTestFileName = "$testName.after.kt"
+    private fun checkWrongCaretPosForKotlinAndJava(testName: String) {
+        checkWrongCaretPosition(testName, "kotlin", "kt")
+        checkWrongCaretPosition(testName, "java", "java")
+    }
+
+    private fun checkMethodDocumentationIntention(testName: String, codeLanguage: String, fileExtension: String, nextDocSuggestion: String) {
+        val beforeTestFileName = "/$codeLanguage.code.examples/$testName.before.$fileExtension"
+        val afterTestFileName = "/$codeLanguage.code.examples/$testName.after.$fileExtension"
+
 
         myFixture.configureByFile(beforeTestFileName).putUserData(mockedDocKey, nextDocSuggestion)
         val intentionHint = MyBundle.message("intentionHint")
@@ -47,8 +68,8 @@ class MethodDocumentationIntentionTest : BasePlatformTestCase() {
         }
     }
 
-    private fun checkWrongCaretPosition(testName: String) {
-        val beforeTestFileName = "$testName.before.kt"
+    private fun checkWrongCaretPosition(testName: String, codeLanguage: String, fileExtension: String) {
+        val beforeTestFileName = "/$codeLanguage.code.examples/$testName.before.$fileExtension"
         myFixture.configureByFile(beforeTestFileName)
 
         val intentionHint = MyBundle.message("intentionHint")
