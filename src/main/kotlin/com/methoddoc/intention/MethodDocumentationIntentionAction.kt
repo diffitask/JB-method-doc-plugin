@@ -79,6 +79,9 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
         }
 
         val openAIApiSecretKey = "" // TODO: to add secret key before running app
+        if (openAIApiSecretKey == "") {
+            return "/** Default documentation stub */"
+        }
         val openAI = OpenAI(openAIApiSecretKey)
 
         val completionRequest = CompletionRequest(
