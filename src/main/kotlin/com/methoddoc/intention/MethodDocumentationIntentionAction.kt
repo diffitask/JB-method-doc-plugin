@@ -1,4 +1,4 @@
-package intention
+package com.methoddoc.intention
 
 import com.aallam.openai.api.completion.CompletionRequest
 import com.aallam.openai.api.model.ModelId
@@ -18,7 +18,8 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
      * If this action is applicable, returns the text to be shown in the list of intention actions available.
      */
     override fun getText(): String {
-        return "Generate method documentation"
+        // get intention hint from the properties file
+        return MyBundle.message("intentionHint")
     }
 
     /**
@@ -41,22 +42,27 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
      * intention menu or {@code false} for all other types of caret positions
      */
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+        // look for a method name
         when (element.language.id) {
             "kotlin" -> {
+                // not a method element
                 if (element.parent !is KtNamedFunction) {
                     return false
                 }
                 val elementFun = element.parent as KtNamedFunction
+                // not a method name identifier
                 if (elementFun.nameIdentifier !== element) {
                     return false
                 }
             }
 
             "JAVA" -> {
+                // not a method element
                 if (element.parent !is PsiMethod) {
                     return false
                 }
                 val elementFun = element.parent as PsiMethod
+                // not a method name identifier
                 if (elementFun.nameIdentifier !== element) {
                     return false
                 }
@@ -65,7 +71,13 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
         return true
     }
 
-    private fun generateMethodDocumentation(methodCode: String): String {
+    private fun generateMethodDocumentation(methodCode: String, element: PsiElement): String {
+        // check mocked method documentation (for testing)
+        element.containingFile.getUserData(mockedDocKey)?.let {
+            element.containingFile.putUserData(mockedDocKey, null)
+            return it
+        }
+
         val openAIApiSecretKey = "" // TODO: to add secret key before running app
         val openAI = OpenAI(openAIApiSecretKey)
 
@@ -85,6 +97,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
         val completion = runBlocking {
             openAI.completion(completionRequest)
         }
+        // OpenAI answer
         val methodDoc = completion.choices[0].text
         return "/** $methodDoc */"
     }
@@ -99,7 +112,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
      */
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         // generate method documentation
-        val methodDocStr = generateMethodDocumentation(element.parent.text)
+        val methodDocStr = generateMethodDocumentation(element.parent.text, element)
 
         when (element.language.id) {
             "kotlin" -> {
