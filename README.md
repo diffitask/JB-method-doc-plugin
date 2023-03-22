@@ -14,7 +14,7 @@ text-davinci-003') based on the method code.
 The plugin analyzes symbols under the cursor in the code opened in the editor. If the cursor is located above the
 method name, IntelliJ IDEA proposes to create documentation for this method, if it has not yet been, or replace the
 existing one:
-<img src="/images/intention-example.png"/>
+![](images/intention-example.png)
 
 If there were any comments related to the method before the function declaration, they are saved intact.
 
