@@ -78,7 +78,7 @@ class MethodDocumentationIntentionAction : PsiElementBaseIntentionAction() {
             return it
         }
 
-        val openAIApiSecretKey = "" // TODO: to add secret key before running app
+        val openAIApiSecretKey = MyBundle.message("openAIApiSecretKey")
         if (openAIApiSecretKey == "") {
             return "/** Default documentation stub */"
         }

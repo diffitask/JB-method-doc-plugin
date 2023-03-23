@@ -24,10 +24,15 @@ intelligence [OpenAI](https://platform.openai.com) based on the code of the meth
 ### Important! Add your OpenAI API secret key
 
 Before running the plugin, it is necessary to **get your unique OpenAI API secret key**, which can be generated
-here: [OpenAI API keys](https://platform.openai.com/account/api-keys), and then **write it** on the line number 81
-in
-the ['MethodDocumentationIntentionAction.kt'](https://github.com/diffitask/method-doc-intellij-plugin/blob/main/src/main/kotlin/com/methoddoc/intention/MethodDocumentationIntentionAction.kt)
-file, so that relevant documentation can be created.
+here: [OpenAI API keys](https://platform.openai.com/account/api-keys), and then **write it** as the value of the
+*openAIApiSecretKey* in
+['MyBundle.properties'](https://github.com/diffitask/method-doc-intellij-plugin/blob/main/src/main/resources/messages/MyBundle.properties)
+file, so that relevant documentations can be created. For example, the corresponding line in the file will look like
+this:
+
+```
+openAIApiSecretKey=sk-SOMELETTERS
+```
 
 Otherwise, the same stub will always be shown as the documentation.
 
@@ -98,12 +103,14 @@ are tests for Kotlin and Java code examples. To run the tests,
 run ['MethodDocumentationIntentionTest.kt'](https://github.com/diffitask/method-doc-intellij-plugin/blob/main/src/test/kotlin/com/methoddoc/intention/MethodDocumentationIntentionTest.kt)
 class.
 
-Tests considered the plugin work for Java and Kotlin code in the [following cases](https://github.com/diffitask/method-doc-intellij-plugin/tree/main/src/test/testData):
+Tests considered the plugin work for Java and Kotlin code in
+the [following cases](https://github.com/diffitask/method-doc-intellij-plugin/tree/main/src/test/testData):
+
 * Methods without any documentation and comments above
-  * Simple method
-  * Complicated method with arguments and return value
+    * Simple method
+    * Complicated method with arguments and return value
 * Methods with previous documentation
-  * Only documentation before method declaration
-  * Documentation and comment before method declaration
-  * Documentation and many comments with some spaces before method declaration
+    * Only documentation before method declaration
+    * Documentation and comment before method declaration
+    * Documentation and many comments with some spaces before method declaration
 * Wrong caret position -- it is expected that Method Documentation intention is not shown in such cases
