@@ -48,7 +48,7 @@ Intentions list:
 <kbd>Settings/Preferences</kbd> > <kbd>Editor</kbd> > <kbd>Intentions</kbd> > <kbd>SDK intentions</kbd> > <kbd>Generate
 method documentation</kbd>
 
-<img src="images/intention-in-preferences.png" width="100%" height="30%">
+<img src="images/intention-in-preferences.png" width="100%" height="25%">
 
 ## How does it work?
 
@@ -98,7 +98,7 @@ are tests for Kotlin and Java code examples. To run the tests,
 run ['MethodDocumentationIntentionTest.kt'](https://github.com/diffitask/method-doc-intellij-plugin/src/test/kotlin/com/methoddoc/intention/MethodDocumentationIntentionTest.kt)
 class.
 
-Tests considered the work of the plugin in the following cases:
+Tests considered the plugin work for Java and Kotlin code in the [following cases](https://github.com/diffitask/method-doc-intellij-plugin/tree/main/src/test/testData):
 * Methods without any documentation and comments above
   * Simple method
   * Complicated method with arguments and return value
