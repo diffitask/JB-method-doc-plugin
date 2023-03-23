@@ -26,7 +26,7 @@ intelligence [OpenAI](https://platform.openai.com) based on the code of the meth
 Before running the plugin, it is necessary to **get your unique OpenAI API secret key**, which can be generated
 here: [OpenAI API keys](https://platform.openai.com/account/api-keys), and then **write it** on the line number 81
 in
-the ['MethodDocumentationIntentionAction.kt'](https://github.com/diffitask/method-doc-intellij-plugin/src/main/kotlin/com/methoddoc/intention/MethodDocumentationIntentionAction.kt)
+the ['MethodDocumentationIntentionAction.kt'](https://github.com/diffitask/method-doc-intellij-plugin/blob/main/src/main/kotlin/com/methoddoc/intention/MethodDocumentationIntentionAction.kt)
 file, so that relevant documentation can be created.
 
 Otherwise, the same stub will always be shown as the documentation.
@@ -95,7 +95,7 @@ fun awesomeMethod(dayNumber: Int): String {
 
 To check the correctness of the plugin in various cases, there
 are tests for Kotlin and Java code examples. To run the tests,
-run ['MethodDocumentationIntentionTest.kt'](https://github.com/diffitask/method-doc-intellij-plugin/src/test/kotlin/com/methoddoc/intention/MethodDocumentationIntentionTest.kt)
+run ['MethodDocumentationIntentionTest.kt'](https://github.com/diffitask/method-doc-intellij-plugin/blob/main/src/test/kotlin/com/methoddoc/intention/MethodDocumentationIntentionTest.kt)
 class.
 
 Tests considered the plugin work for Java and Kotlin code in the [following cases](https://github.com/diffitask/method-doc-intellij-plugin/tree/main/src/test/testData):
